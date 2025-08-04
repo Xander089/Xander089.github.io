@@ -12,3 +12,9 @@ twitter_username: pippo
 theme: minima
 plugins:
   - jekyll-feed
+
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "About"
+    url: "/about"
