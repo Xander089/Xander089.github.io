@@ -13,8 +13,6 @@ theme: minima
 plugins:
   - jekyll-feed
 
-navigation:
-  - title: "Home"
-    url: "/"
-  - title: "About"
-    url: "/about"
+header_pages:
+- course.md
+- about.md
