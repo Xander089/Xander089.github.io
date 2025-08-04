@@ -14,5 +14,5 @@ plugins:
   - jekyll-feed
 
 header_pages:
-- 0_course.md
+- course.md
 - about.md
