@@ -4,63 +4,43 @@ title: "Course"
 permalink: "/course"
 ---
 
-## Intro
-    
-- A course on demystifying Unreal Engine
-    - Who is this course for:
-        - aspiring game developers/designers
-        - they already have some knowledge but the editor is daunting
-        - they feel there is no valid tutorials out there
-        - or if there are any, they lack clarity
-
-    - The purpose of this course is
-        - to provide a system to make developers walk on their own two feets
-        - rather than giving basic information
-        - focus on the overall aspects
-        - the system is more than its sub component
-
-    - At the end of the course the student will be able to:
-        - understand the process of building a game from start to finish
-        - subdivide the project into its main core sections
-        - use modern continuous delivery techniques to:
-        - iterate fast
-        - keeping the project as stable as possible
-        - Use game design to guide the project development timeline
-
 ## Table of contents
     
-1. [The Unreal Editor](/course/editor-shortcuts)
+- [The Unreal Editor](/course/editor-shortcuts)
     - shortcuts
     - main features, and whose these features are for
     
-2. [Game Design](/course/game-design):
-- writing down what game we are trying to develop
-    - a prototype expedition 33 like:
-    - walk
-    - encounter
-    - battle
+- [Game Design](/course/game-design):
+    - writing down what game we are trying to develop
+        - a prototype expedition 33 like:
+        - walk
+        - encounter
+        - battle
 
-3. [Creating the project](/course/create-a-project)
+- [Creating the project](/course/create-a-project)
 
-4. [Character design](/course/character-design)
+- [Character design](/course/character-design)
     - metahuman
     - ...
     - animations
                 
-5. [Level design](/course/level-design)
+- [Level design](/course/level-design)
         
-6. [Gameplay](/course/gameplay)
+- [Gameplay](/course/gameplay)
     - bp\c++ framework
-    - source control
-    - testing
-    - movement
-    - components: inventory
-    - abilities
-    - animation state tree
+    - [Saving the game](/course/saving-the-game)
+    - Source control
+    - Testing
+    - Movement
+    - [Components](/course/components)
+    - [Abilities](/course/abilities)
+    - Animation state tree
     - Enemy AI
     - Battle System
         
-7. [Audio and Localization](/course/audio)      
+- [Audio and Localization](/course/audio)      
 
-8. [Camera sequence](/course/camera)
+- [Camera sequence](/course/camera)
+
+- [User Interface](/course/user-interface)
         

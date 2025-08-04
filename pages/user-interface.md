@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Adding a menu screen"
+title: "Menu"
 permalink: "/course/user-interface"
 ---
 
