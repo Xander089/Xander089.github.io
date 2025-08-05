@@ -9,3 +9,4 @@ permalink: "/course/materials"
 - add landscape layer blend
 
 
+- material functions: way to group functionalities in order o not make the graph too complicated
