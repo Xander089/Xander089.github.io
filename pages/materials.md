@@ -8,5 +8,4 @@ permalink: "/course/materials"
 - open and flag true the property Use Material Attributes
 - add landscape layer blend
 
-
 - material functions: way to group functionalities in order o not make the graph too complicated
