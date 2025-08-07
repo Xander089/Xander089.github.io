@@ -25,6 +25,7 @@ permalink: "/course"
     - animations
                 
 - [Level design](/course/level-design)
+    - [Materials](/course/materials)
         
 - [Gameplay](/course/gameplay)
     - bp\c++ framework
