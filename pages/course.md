@@ -44,4 +44,5 @@ permalink: "/course"
 - [Camera sequence](/course/camera)
 
 - [User Interface](/course/user-interface)
-        
+
+- [Modules](/course/modules)
