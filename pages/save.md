@@ -4,6 +4,8 @@ title: "How to save and loaf the game"
 permalink: "/course/saving-the-game"
 ---
 
+![Load Sync](/assets/images/SaveArch.png)
+
 https://dev.epicgames.com/documentation/en-us/unreal-engine/saving-and-loading-your-game-in-unreal-engine
 - sync save\load
 - async save\load
