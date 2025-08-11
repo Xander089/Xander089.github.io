@@ -14,3 +14,7 @@ https://dev.epicgames.com/documentation/en-us/unreal-engine/saving-and-loading-y
     - prendere lo stato, attribute set
 
 - i delegate per salvare in async sono in Kismet Gameplay static, nnon bisogna ridefinirli altrimenti errore
+
+## Come caricare in sync
+- https://chatgpt.com/share/689a0455-e360-8003-89b1-b077e2fe2a2b
+
