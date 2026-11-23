@@ -16,7 +16,7 @@ const cards = [
     name: 'HOER',
     anchor: '#hoer',
     repo: repos.hoer,
-    summary: 'A light-driven horror game in UE 5.5. I built its audio, AI, save and UI systems.',
+    summary: 'A light-driven horror game in UE 5.5. I built its UI, audio, AI, and save systems.',
   },
   {
     name: 'Small Object Allocator',
@@ -67,7 +67,7 @@ if (auto Statement = Db.GetPreparedStatement(
     <p class="hero-links">
       <a href={site.github}>GitHub</a>
       <a href={site.linkedin}>LinkedIn</a>
-      <a href={`mailto:${site.email}`}>Email</a>
+      <!-- <a href={`mailto:${site.email}`}>Email</a> -->
     </p>
 
     <ul class="cards">
@@ -110,6 +110,15 @@ if (auto Statement = Db.GetPreparedStatement(
       data assets and exposed to Blueprints, so designers can tune it without touching code.
     </p>
 
+    <h3>UI</h3>
+    <ul>
+      <li><strong>Page-stack HUD.</strong> <code>AHOERHUD</code> pushes and pops full-screen pages, restores focus, switches input mapping between UI and gameplay, handles Back/Cancel and shows timed toast notifications.</li>
+      <li><strong>Complete menu flow</strong>: main menu (New Game / Continue), pause, settings, controls, auto-scrolling credits, game over and game end.</li>
+      <li><strong>Reusable widget library.</strong> A shared base widget plus button, slider row, command row, credit row, footer and in-world interaction prompt, all with Blueprint hooks for focus and hover animations.</li>
+      <li><strong>Full gamepad support.</strong> Focus navigation works with keyboard or gamepad, and footer prompt icons switch when a controller connects or disconnects.</li>
+      <li><strong>In-game HUD</strong> with a real-time <strong>panic bar</strong>, plus volume sliders wired to the persistent settings.</li>
+    </ul>
+
     <h3>Audio</h3>
     <ul>
       <li><strong>Component-based architecture.</strong> An abstract <code>UBaseAudioComponent</code> with subclasses for the player, the companion, enemies and world props such as doors, pushable blocks and puzzles.</li>
@@ -136,14 +145,6 @@ if (auto Statement = Db.GetPreparedStatement(
       <li><strong>Persistent settings.</strong> A custom <code>UGameUserSettings</code> stores music and SFX volume and applies them to the Sound Mix and Sound Classes at runtime.</li>
     </ul>
 
-    <h3>UI</h3>
-    <ul>
-      <li><strong>Page-stack HUD.</strong> <code>AHOERHUD</code> pushes and pops full-screen pages, restores focus, switches input mapping between UI and gameplay, handles Back/Cancel and shows timed toast notifications.</li>
-      <li><strong>Complete menu flow</strong>: main menu (New Game / Continue), pause, settings, controls, auto-scrolling credits, game over and game end.</li>
-      <li><strong>Reusable widget library.</strong> A shared base widget plus button, slider row, command row, credit row, footer and in-world interaction prompt, all with Blueprint hooks for focus and hover animations.</li>
-      <li><strong>Full gamepad support.</strong> Focus navigation works with keyboard or gamepad, and footer prompt icons switch when a controller connects or disconnects.</li>
-      <li><strong>In-game HUD</strong> with a real-time <strong>panic bar</strong>, plus volume sliders wired to the persistent settings.</li>
-    </ul>
   </Section>
 
   <!-- ===================== Small Object Allocator ===================== -->
@@ -250,7 +251,7 @@ if (auto Statement = Db.GetPreparedStatement(
     <h2>Contact</h2>
     <p>Interested in my work? Feel free to reach out.</p>
     <p class="hero-links">
-      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <!-- <a href={`mailto:${site.email}`}>{site.email}</a> -->
       <a href={site.linkedin}>LinkedIn</a>
       <a href={site.github}>GitHub</a>
     </p>

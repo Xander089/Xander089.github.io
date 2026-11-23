@@ -5,8 +5,8 @@ export const site = {
   name: 'Alessandro Lombardi',
   title: 'Unreal Engine C++ Developer',
   bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
-  email: 'your.name@example.com', // TODO: real address
-  linkedin: 'https://www.linkedin.com/in/your-profile', // TODO: real profile
+  email: '',
+  linkedin: 'https://www.linkedin.com/in/alessandrolombardi1',
   github: 'https://github.com/Xander089',
 };
 
