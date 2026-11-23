@@ -1,0 +1,75 @@
+---
+// A project section: title, one-line pitch, facts row (engine, context...) and links.
+interface Props {
+  id: string;
+  title: string;
+  lede: string;
+  facts?: { label: string; value: string }[];
+  links?: { label: string; href: string | null; pending?: string }[];
+}
+const { id, title, lede, facts = [], links = [] } = Astro.props;
+---
+
+<section id={id} class="project">
+  <h2>{title}</h2>
+  <p class="lede">{lede}</p>
+
+  {facts.length > 0 && (
+    <dl class="facts">
+      {facts.map((f) => (
+        <div>
+          <dt>{f.label}</dt>
+          <dd>{f.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+
+  {links.length > 0 && (
+    <p class="links">
+      {links.map((l) =>
+        l.href ? (
+          <a class="btn" href={l.href}>{l.label}</a>
+        ) : (
+          <span class="btn pending" title={l.pending ?? 'Not available yet'}>{l.label}{l.pending ? ` · ${l.pending}` : ''}</span>
+        )
+      )}
+    </p>
+  )}
+
+  <slot />
+</section>
+
+<style>
+  .project {
+    padding-top: 3rem;
+    margin-top: 3rem;
+    border-top: 1px solid var(--line);
+  }
+  h2 { font-size: 1.75rem; margin: 0 0 0.5rem; }
+  .lede { font-size: 1.08rem; color: var(--muted); margin: 0 0 1.25rem; }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+  }
+  .facts dt { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .facts dd { margin: 0; font-weight: 550; }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.5rem; }
+  .btn {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    background: var(--surface);
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn.pending { color: var(--muted); border-style: dashed; cursor: default; }
+  .project :global(h3) { font-size: 1.15rem; margin: 2rem 0 0.5rem; }
+  .project :global(ul) { padding-left: 1.2rem; }
+  .project :global(li) { margin-bottom: 0.45rem; }
+</style>

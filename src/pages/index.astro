@@ -1,0 +1,352 @@
+---
+import { Code } from 'astro:components';
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { site, repos, hoerLinks } from '../site';
+
+const nav = [
+  { href: '#hoer', label: 'HOER' },
+  { href: '#small-object-allocator', label: 'Allocator' },
+  { href: '#duckdbcore', label: 'DuckDbCore' },
+  { href: '#contact', label: 'Contact' },
+];
+
+const cards = [
+  {
+    name: 'HOER',
+    anchor: '#hoer',
+    repo: repos.hoer,
+    summary: 'A light-driven horror game in UE 5.5. I built its audio, AI, save and UI systems.',
+  },
+  {
+    name: 'Small Object Allocator',
+    anchor: '#small-object-allocator',
+    repo: repos.soa,
+    summary: "Alexandrescu's pooled allocator for small objects, rebuilt in modern C++.",
+  },
+  {
+    name: 'DuckDbCore',
+    anchor: '#duckdbcore',
+    repo: repos.duckdb,
+    summary: 'An Unreal plugin that brings DuckDB analytics into games and tools. Work in progress.',
+  },
+];
+
+const duckExample =`// Open (or create) a database: ":memory:" or a file path.
+FDuckDbDatabase Db(TEXT(":memory:"));
+Db.Execute(TEXT("CREATE TABLE events (player INTEGER, kind VARCHAR);"));
+
+// Fast bulk insert through an appender.
+if (TUniquePtr<FDuckDbAppender> Appender = Db.GetAppender(TEXT("events")))
+{
+    Appender->AppendInt32Value(1);
+    Appender->AppendVarcharValue(TEXT("death"));
+    Appender->EndRow();
+    Appender->Flush();
+}
+
+// Parameterized query: results arrive as columnar chunks.
+if (auto Statement = Db.GetPreparedStatement(
+        TEXT("SELECT kind, count(*) FROM events WHERE player = $1 GROUP BY kind")))
+{
+    Statement->BindInt32Value(1, 1);
+    Statement->Execute([](const FDuckDbDataChunk& Chunk)
+    {
+        // read whole columns at once with Chunk.GetColumn(i)
+        return true; // false stops fetching
+    });
+}`;
+---
+
+<Base title={`${site.name} · ${site.title}`} nav={nav}>
+  <!-- ===================== Intro ===================== -->
+  <section class="hero">
+    <p class="eyebrow">{site.title}</p>
+    <h1>{site.name}</h1>
+    <p class="bio">{site.bio}</p>
+    <p class="hero-links">
+      <a href={site.github}>GitHub</a>
+      <a href={site.linkedin}>LinkedIn</a>
+      <a href={`mailto:${site.email}`}>Email</a>
+    </p>
+
+    <ul class="cards">
+      {cards.map((c) => (
+        <li>
+          <a class="card-main" href={c.anchor}>
+            <strong>{c.name}</strong>
+            <span>{c.summary}</span>
+          </a>
+          {c.repo && (
+            <a class="card-repo" href={c.repo}>
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ===================== HOER ===================== -->
+  <Section
+    id="hoer"
+    title="HOER"
+    lede="A light-driven horror game: the player explores dark corridors with a plush companion while an enemy, guided by an AI Director, hunts them."
+    facts={[
+      { label: 'Engine', value: 'Unreal Engine 5.5 (C++)' },
+      { label: 'Context', value: "Master's course final project" },
+      { label: 'Team', value: '4 programmers' },
+      { label: 'My role', value: 'Audio · AI · Save · UI' },
+    ]}
+    links={[
+      { label: 'Play on itch.io', href: hoerLinks.itch, pending: 'coming soon' },
+      { label: 'Watch the trailer', href: hoerLinks.trailer, pending: 'coming soon' },
+      { label: 'Source on GitHub', href: repos.hoer },
+    ]}
+  >
+    <p>
+      I owned four gameplay systems. Each one is mostly written in C++, configured through
+      data assets and exposed to Blueprints, so designers can tune it without touching code.
+    </p>
+
+    <h3>Audio</h3>
+    <ul>
+      <li><strong>Component-based architecture.</strong> An abstract <code>UBaseAudioComponent</code> with subclasses for the player, the companion, enemies and world props such as doors, pushable blocks and puzzles.</li>
+      <li><strong>MetaSound integration.</strong> MetaSound assets stream in asynchronously through the <code>StreamableManager</code>. Sounds fire through named MetaSound triggers and stop with ADSR fade-outs instead of hard cuts.</li>
+      <li><strong>Event-driven.</strong> Each component listens to its owner's gameplay events (footsteps, jumps, throws, grabs, landings, enemy growls), so gameplay code never references audio code.</li>
+      <li><strong>Adaptive music.</strong> A <code>MusicActor</code> crossfades between <em>Calm</em>, <em>Mid</em> and <em>High tension</em> layers, driven by the AI chase logic.</li>
+      <li><strong>Designer tooling.</strong> Event names and concurrency/attenuation settings live in data assets, editor dropdowns list the available MetaSound triggers, and data validation catches misconfigured components.</li>
+    </ul>
+
+    <h3>AI</h3>
+    <ul>
+      <li><strong>Two-layer design.</strong> An <strong>AI Director</strong> controls pacing and tells the <strong>Enemy</strong> where to search. Both run on Behavior Trees with shared Blackboard keys.</li>
+      <li><strong>Risk awareness.</strong> The Director watches which lights the player turns on and whether the player is lit, and folds this into one risk value. Curve tables map that value to the enemy's speed, sight radius, peripheral vision and hearing range.</li>
+      <li><strong>AI Perception.</strong> With sight and hearing, the enemy detects and loses the player, starts chases, broadcasts detection events that drive music and tension, and ignores players inside safe zones.</li>
+      <li><strong>Nine custom C++ Behavior Tree tasks</strong>: patrol-point assignment, waypoint and random NavMesh patrols, chase handling, reacting to risk, and teleporting the enemy to a corridor spawn point out of the player's sight.</li>
+      <li><strong>Environmental storytelling.</strong> Nearby lights switch off as the enemy approaches and come back after a delay, so the player can feel where it is.</li>
+    </ul>
+
+    <h3>Save system</h3>
+    <ul>
+      <li><strong><code>USaveSubsystem</code></strong> (a Game Instance Subsystem) saves to disk asynchronously, loads from named slots and applies the save after a level transition.</li>
+      <li><strong>Interface-driven persistence.</strong> Actors opt in through <code>ISavableActorInterface</code> and are captured generically: player and enemy transforms, used interactables, unlocked doors (whose keys are hidden again on load).</li>
+      <li><strong>Hashed save records.</strong> <code>FActorSaveData</code> entries live in <code>TSet</code>s keyed by actor name for fast lookups on restore. The world state is rebuilt on every save, so stale entries never pile up.</li>
+      <li><strong>Persistent settings.</strong> A custom <code>UGameUserSettings</code> stores music and SFX volume and applies them to the Sound Mix and Sound Classes at runtime.</li>
+    </ul>
+
+    <h3>UI</h3>
+    <ul>
+      <li><strong>Page-stack HUD.</strong> <code>AHOERHUD</code> pushes and pops full-screen pages, restores focus, switches input mapping between UI and gameplay, handles Back/Cancel and shows timed toast notifications.</li>
+      <li><strong>Complete menu flow</strong>: main menu (New Game / Continue), pause, settings, controls, auto-scrolling credits, game over and game end.</li>
+      <li><strong>Reusable widget library.</strong> A shared base widget plus button, slider row, command row, credit row, footer and in-world interaction prompt, all with Blueprint hooks for focus and hover animations.</li>
+      <li><strong>Full gamepad support.</strong> Focus navigation works with keyboard or gamepad, and footer prompt icons switch when a controller connects or disconnects.</li>
+      <li><strong>In-game HUD</strong> with a real-time <strong>panic bar</strong>, plus volume sliders wired to the persistent settings.</li>
+    </ul>
+  </Section>
+
+  <!-- ===================== Small Object Allocator ===================== -->
+  <Section
+    id="small-object-allocator"
+    title="Small Object Allocator"
+    lede="A reproduction of the small-object allocator from Andrei Alexandrescu's Modern C++ Design. It makes many tiny allocations faster and less wasteful than the default new."
+    facts={[
+      { label: 'Language', value: 'C++' },
+      { label: 'Build', value: 'CMake' },
+      { label: 'Reference', value: 'Modern C++ Design, ch. 4' },
+    ]}
+    links={[{ label: 'Source on GitHub', href: repos.soa }]}
+  >
+    <p>
+      General-purpose allocators pay a per-allocation overhead that hurts when a program creates
+      thousands of objects of a few bytes each. This allocator groups same-size objects into
+      pre-allocated blocks and hands them out with almost no bookkeeping. It's built in four layers,
+      from the lowest to the highest:
+    </p>
+
+    <ol class="layers">
+      <li>
+        <strong>Chunk</strong>
+        <span>One block of raw memory split into equal-size blocks. Each free block stores the index of the next free one, so the free list costs no extra memory.</span>
+      </li>
+      <li>
+        <strong>FixedAllocator</strong>
+        <span>A vector of Chunks for one object size. It only adds a new Chunk when all the existing ones are full.</span>
+      </li>
+      <li>
+        <strong>SmallObjectAllocator</strong>
+        <span>The entry point. It keeps one FixedAllocator per object size and routes each request to the right one. Requests above the maximum size (64 bytes by default) go to the global <code>::operator new</code>.</span>
+      </li>
+      <li>
+        <strong>SmallObject</strong>
+        <span>Inherit from it and your class is allocated by the pool. It overrides the sized <code>operator delete(void*, size_t)</code>, because blocks carry no header and the allocator needs the compiler to pass the size. The destructor is virtual so the size stays correct when deleting through a base pointer.</span>
+      </li>
+    </ol>
+
+    <h3>Limitations</h3>
+    <p>
+      This version is not thread safe. A single shared allocator mutates its caches, its pool of
+      FixedAllocators and every Chunk's free list on each <code>new</code> and <code>delete</code>
+      without a lock, so two threads allocating at once can grab the same block or corrupt the free
+      list. Loki, the original library, solves this with a threading-policy template parameter.
+    </p>
+  </Section>
+
+  <!-- ===================== DuckDbCore ===================== -->
+  <Section
+    id="duckdbcore"
+    title="DuckDbCore"
+    lede="An Unreal Engine plugin that embeds DuckDB, a fast in-process analytical database, with the same feel as Unreal's built-in SQLiteCore."
+    facts={[
+      { label: 'Engine', value: 'Unreal Engine 5.5' },
+      { label: 'DuckDB', value: 'v1.5.5' },
+      { label: 'Platforms', value: 'macOS · Windows (experimental)' },
+      { label: 'Status', value: 'Work in progress' },
+      { label: 'License', value: 'MIT' },
+    ]}
+    links={[{ label: 'Source on GitHub', href: repos.duckdb }]}
+  >
+    <h3>Why DuckDB in Unreal?</h3>
+    <p>
+      Unreal ships with <strong>SQLiteCore</strong>, a thin wrapper around SQLite. SQLite is great at
+      storing and fetching individual records, which is what save data or inventories need. Many game
+      and tooling tasks look different though: crunching gameplay telemetry, balancing data, logs or
+      large generated datasets means scanning and aggregating thousands or millions of rows.
+    </p>
+    <p>
+      That is the workload <strong>DuckDB</strong> was designed for. It stores data by column and
+      processes it in batches, so analytical queries like <code>GROUP BY</code>, averages or joins over
+      large tables run much faster. Like SQLite, it runs inside the process: no server to install.
+    </p>
+
+    <h3>What the plugin does</h3>
+    <ul>
+      <li><strong>Familiar API.</strong> It follows the shape of SQLiteCore, so an Unreal developer can open a database, run statements and read results without learning a new style.</li>
+      <li><strong>Safe C++ wrappers</strong> around DuckDB's C API. Databases, statements and results clean up after themselves, so no handle leaks.</li>
+      <li><strong>Prepared statements</strong> with parameter binding, for safe and reusable queries.</li>
+      <li><strong>Appenders</strong> for fast bulk inserts, much quicker than issuing one <code>INSERT</code> per row.</li>
+      <li><strong>Columnar results.</strong> Query results arrive in chunks, and each column can be read directly from DuckDB's memory without copying.</li>
+      <li><strong>Unreal-style error handling.</strong> Every failure is logged to a dedicated <code>LogDuckDb</code> category and kept for <code>GetLastError()</code>.</li>
+      <li><strong>Zero-effort packaging.</strong> The DuckDB library is staged automatically when you package the game.</li>
+    </ul>
+
+    <h3>A quick look</h3>
+    <Code code={duckExample} lang="cpp" themes={{ light: 'github-light', dark: 'github-dark' }} />
+
+    <h3>Status and next steps</h3>
+    <ul>
+      <li>Tested on macOS (Apple Silicon and Intel) with UE 5.5.4. Windows 64-bit support is in place but not tested yet.</li>
+      <li>
+        <strong>Coming next: a SQLite vs DuckDB benchmark.</strong> Once development is finished, this
+        section will include a side-by-side comparison of SQLiteCore and DuckDbCore on typical game
+        workloads: bulk inserts, point lookups and analytical queries.
+      </li>
+    </ul>
+  </Section>
+
+  <!-- ===================== Contact ===================== -->
+  <section id="contact" class="contact">
+    <h2>Contact</h2>
+    <p>Interested in my work? Feel free to reach out.</p>
+    <p class="hero-links">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <a href={site.linkedin}>LinkedIn</a>
+      <a href={site.github}>GitHub</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-top: 3.5rem; }
+  .eyebrow {
+    margin: 0;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  h1 { font-size: clamp(2.2rem, 7vw, 3.2rem); margin: 0.25rem 0 1rem; }
+  .bio { font-size: 1.1rem; color: var(--muted); max-width: 40rem; }
+  .hero-links { display: flex; flex-wrap: wrap; gap: 1.25rem; font-weight: 550; }
+
+  .cards {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+  .cards li {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    transition: border-color 0.15s;
+  }
+  .cards li:hover { border-color: var(--accent); }
+  .card-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem 1.15rem 0.75rem;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .card-main span { color: var(--muted); font-size: 0.92rem; }
+  .card-repo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: flex-start;
+    margin: 0 1.15rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .card-repo:hover { text-decoration: underline; }
+
+  .layers { list-style: none; padding: 0; counter-reset: layer; display: grid; gap: 0.75rem; }
+  .layers li {
+    counter-increment: layer;
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.85rem 1rem 0.85rem 3rem;
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+  .layers li::before {
+    content: counter(layer);
+    position: absolute;
+    left: 1rem;
+    top: 0.85rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+  }
+  .layers span { color: var(--muted); }
+
+  .contact { margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--line); }
+  .contact h2 { font-size: 1.75rem; margin: 0 0 0.5rem; }
+
+  /* Shiki dual theme: switch code colors in dark mode */
+  @media (prefers-color-scheme: dark) {
+    :global(.astro-code),
+    :global(.astro-code span) {
+      color: var(--shiki-dark) !important;
+      background-color: var(--shiki-dark-bg) !important;
+    }
+  }
+</style>
